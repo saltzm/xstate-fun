@@ -1,0 +1,21 @@
+{
+    "name": "xstate-raft",
+    "type": "module",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.html",
+    "scripts": {
+        "start": "parcel index.html --open",
+        "build": "parcel build index.html"
+    },
+    "dependencies": {
+        "@xstate/inspect": "^0.1.1",
+        "actions": "^1.3.0",
+        "xstate": "4.13.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.2.0",
+        "parcel-bundler": "^1.12.4"
+    },
+    "keywords": []
+}
