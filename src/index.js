@@ -6,7 +6,7 @@ import {inspect} from '@xstate/inspect';
 inspect({iframe: () => document.querySelector('iframe[data-xstate]')});
 
 // import './raft.js'
-import {assign, interpret, Machine} from 'xstate';
+import {spawn, send, assign, interpret, Machine} from 'xstate';
 
 const sendMessageToPeerMachine = Machine({
     id: 'peer',  // TODO
@@ -68,7 +68,6 @@ const candidateMachine = Machine(
             }
         }
     });
-
 
 // Stateless machine definition
 // machine.transition(...) is a pure function used by the interpreter.A
@@ -147,14 +146,19 @@ const raftMachine = Machine(
 const serverMachine = serverId => Machine({
     id: serverId,
     initial: 'running',
+    context: {raftActorRef: undefined},
     states: {
         running: {
-            invoke: {
-                id: 'raft',
-                src: raftMachine,
-                onDone: 'done',
-                autoForward: true,
-            },
+            onEntry: assign({
+                raftActorRef: (_context, _event) =>
+                    spawn(raftMachine, {name: 'Something', autoForward: true})
+            }),
+            //            invoke: {
+            //                id: 'raft',
+            //                src: raftMachine,
+            //                onDone: 'done',
+            //                autoForward: true,
+            //            },
             on: {'SHUTDOWN': 'done'}
         },
         done: {type: 'final'}
